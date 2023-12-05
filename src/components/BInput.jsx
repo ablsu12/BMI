@@ -1,24 +1,14 @@
-import {useContext} from "react";
-<<<<<<< HEAD
-import {Context} from "./BmiApp";
+import { useContext } from "react";
+import { Context } from "./BmiApp";
 
 const BInput = ({ inputType, inputPlaceholder, inputHandler }) => {
-    const { username } = useContext(Context);
-=======
-import {MyContext} from "./BmiApp";
+  const { username } = useContext(Context);
 
-const BInput = ({ inputType, inputPlaceholder, inputHandler }) => {
-    const value = useContext(MyContext)
->>>>>>> origin/feature
   return (
     <>
       <input
         type={inputType}
-<<<<<<< HEAD
         value={username}
-=======
-        value={value}
->>>>>>> origin/feature
         placeholder={inputPlaceholder}
         onInput={inputHandler}
         className={
