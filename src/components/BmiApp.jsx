@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import BmiPage from "./pages/BmiPage";
 
+<<<<<<< HEAD
 export const Context = React.createContext();
 
 export const BmiApp = () => {
@@ -25,5 +26,23 @@ export const BmiApp = () => {
         <Route path="/BmiPage" element={<BmiPage />} />
       </Routes>
     </Context.Provider>
+=======
+export const MyContext = React.createContext();
+
+export const BmiApp = () => {
+  const [username, setUsername] = useState("");
+  return (
+    <MyContext.Provider value={ username }>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <WelcomePage username={username} setUsername={setUsername} />
+          }
+        />
+        <Route path="/BmiPage" element={<BmiPage />} />
+      </Routes>
+    </MyContext.Provider>
+>>>>>>> origin/feature
   );
 };
