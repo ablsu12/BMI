@@ -1,8 +1,8 @@
 import { BOverlay } from "./BOverlay";
+import { memo } from "react";
 
-export const BLoginError = ({ message, onClose }) => {
+const BErrorPopUp = memo(({ message, onClose }) => {
   const imagePath = `${process.env.PUBLIC_URL}/Icon/close-icon.png`;
-
   return (
     <>
       <BOverlay>
@@ -11,7 +11,7 @@ export const BLoginError = ({ message, onClose }) => {
             onClick={onClose}
             className={"close-btn absolute right-1 px-3 pt-1 mt-2"}
           >
-            <img src={imagePath} alt={'close'}/>
+            <img src={imagePath} alt={"close"} />
           </button>
           <div className={"p-6"}>
             <p
@@ -26,4 +26,5 @@ export const BLoginError = ({ message, onClose }) => {
       </BOverlay>
     </>
   );
-};
+});
+export default BErrorPopUp;

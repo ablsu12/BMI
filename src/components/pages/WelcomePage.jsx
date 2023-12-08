@@ -1,42 +1,43 @@
 // WelcomePage.jsx
 import React, { useContext, useEffect, useState } from "react";
-import { BLoginError } from "../BLoginError";
+import BErrorPopUp from "../BErrorPopUp";
 import BPageTitle from "../BPageTitle";
 import BButton from "../BButton";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../BmiApp";
+import Context from "../BmiApp";
 import BInput from "../BInput";
 
 const WelcomePage = () => {
-  const {
-    username,
-    setUsername,
-    isScreenWide,
-    setIsScreenWide,
-    isScreenTall,
-    setIsScreenTall,
-  } = useContext(Context);
-
-  const [isUsernameCorrect, setIsUsernameCorrect] = useState(true);
-
   const imagePath = `${process.env.PUBLIC_URL}/images/DC.jpg`;
-  const imagePath2 = `${process.env.PUBLIC_URL}/images/DC2.jpg`;
+  const [isScreenTall, setIsScreenTall] = useState(window.innerHeight < 815);
   const navigate = useNavigate();
-  const closeModalHandler = () => {
-    setIsUsernameCorrect((prevCondition) => !prevCondition);
+  const { username, setUsername } = useContext(Context);
+  const [usernameErr, setUsernameErr] = useState({
+    isOpen: false,
+    message: null,
+  });
+  const closeErrModalHandler = () => {
+    setUsernameErr((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      message: null,
+    }));
   };
-  const nameInputHandler = (e) => setUsername(e.target.value);
-  const startedBtnHandler = function () {
+  const inputHandler = (e) => setUsername(e.target.value);
+  const startedBtnHandler = () => {
     try {
       if (username.trim() && isNaN(username)) navigate("/BmiPage");
       else throw new Error("Your name incorrect 🫥");
     } catch (e) {
-      setIsUsernameCorrect((prevState) => !prevState);
+      setUsernameErr((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        message: e.message,
+      }));
     }
   };
   useEffect(() => {
     const handleResize = () => {
-      setIsScreenWide(window.innerWidth > 548);
       setIsScreenTall(window.innerHeight < 815);
     };
     window.addEventListener("resize", handleResize);
@@ -48,22 +49,22 @@ const WelcomePage = () => {
   return (
     <>
       <div className={"w-full h-screen flex flex-col items-center px-16"}>
-        {!isUsernameCorrect && (
-          <BLoginError
-            message={"Your name incorrect 🫥"}
-            onClose={closeModalHandler}
+        {usernameErr.isOpen && (
+          <BErrorPopUp
+            message={usernameErr.message}
+            onClose={closeErrModalHandler}
           />
         )}
-        <header className={"w-full"}>
+        <header className={"w-full pt-3"}>
           <BPageTitle />
         </header>
         <main
           className={
-            "w-full h-4/6 py-4 flex flex-col items-center justify-between "
+            "w-full h-4/6 py-1 flex flex-col items-center justify-between "
           }
         >
           <img
-            src={`${isScreenWide ? imagePath2 : imagePath}`}
+            src={imagePath}
             alt={"DoctorImage"}
             className={"w-72 md:w-2/4 h-4/6 mb-2"}
           />
@@ -86,12 +87,10 @@ const WelcomePage = () => {
             </p>
           )}
         </main>
-        <footer
-          className={"w-full h-1/6 flex flex-col items-center justify-end"}
-        >
+        <footer className={"w-full h-1/6 flex flex-col items-center justify-center"}>
           <BInput
             inputPlaceholder={"Enter your name"}
-            inputHandler={nameInputHandler}
+            inputHandler={inputHandler}
             inputType={"text"}
           />
           <BButton
@@ -103,4 +102,4 @@ const WelcomePage = () => {
     </>
   );
 };
-export default WelcomePage
+export default WelcomePage;
