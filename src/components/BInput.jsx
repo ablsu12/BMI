@@ -1,20 +1,16 @@
-import { useContext } from "react";
-import { Context } from "./BmiApp";
+import useCustomContext from "./context/customContext";
 
 const BInput = ({ inputType, inputPlaceholder, inputHandler }) => {
-  const { username } = useContext(Context);
+  const { userInfo } = useCustomContext();
 
   return (
     <>
       <input
         type={inputType}
-        value={username}
+        value={userInfo.username}
         placeholder={inputPlaceholder}
         onInput={inputHandler}
-        className={
-          "w-72 h-10 text-sm px-4 rounded-full border-2 " +
-          "outline-none md:w-1/2"
-        }
+        className={"w-72 h-10 text-sm px-4 rounded-full border-2 outline-none"}
       />
     </>
   );

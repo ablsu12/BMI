@@ -1,6 +1,6 @@
 // App.js
 import React from "react";
-import { BmiApp } from "./components/BmiApp";
+import BmiApp from "./components/BmiApp";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 const App = () => {
