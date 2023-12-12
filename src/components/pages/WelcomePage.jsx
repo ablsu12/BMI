@@ -1,32 +1,34 @@
 // WelcomePage.jsx
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BErrorPopUp from "../BErrorPopUp";
 import BPageTitle from "../BPageTitle";
 import BButton from "../BButton";
 import { useNavigate } from "react-router-dom";
-import Context from "../BmiApp";
 import BInput from "../BInput";
+import useCustomContext from "../context/customContext";
 
 const WelcomePage = () => {
+  const text = {
+    title: "BMI CALCULATOR",
+    buttonValue: "Get Started",
+  };
   const imagePath = `${process.env.PUBLIC_URL}/images/DC.jpg`;
   const [isScreenTall, setIsScreenTall] = useState(window.innerHeight < 815);
   const navigate = useNavigate();
-  const { username, setUsername } = useContext(Context);
+  const { userInfo, setUserInfo } = useCustomContext();
   const [usernameErr, setUsernameErr] = useState({
     isOpen: false,
     message: null,
   });
-  const closeErrModalHandler = () => {
-    setUsernameErr((prevState) => ({
-      ...prevState,
-      isOpen: false,
-      message: null,
+  const inputHandler = (e) =>
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
+      username: e.target.value,
     }));
-  };
-  const inputHandler = (e) => setUsername(e.target.value);
   const startedBtnHandler = () => {
     try {
-      if (username.trim() && isNaN(username)) navigate("/BmiPage");
+      if (userInfo.username.trim() && isNaN(userInfo.username))
+        navigate("/BmiPage");
       else throw new Error("Your name incorrect 🫥");
     } catch (e) {
       setUsernameErr((prevState) => ({
@@ -45,7 +47,13 @@ const WelcomePage = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  const closeErrModalHandler = () => {
+    setUsernameErr((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      message: null,
+    }));
+  };
   return (
     <>
       <div className={"w-full h-screen flex flex-col items-center px-16"}>
@@ -56,18 +64,14 @@ const WelcomePage = () => {
           />
         )}
         <header className={"w-full pt-3"}>
-          <BPageTitle />
+          <BPageTitle title={text.title} />
         </header>
         <main
           className={
             "w-full h-4/6 py-1 flex flex-col items-center justify-between "
           }
         >
-          <img
-            src={imagePath}
-            alt={"DoctorImage"}
-            className={"w-72 md:w-2/4 h-4/6 mb-2"}
-          />
+          <img src={imagePath} alt={"DoctorImage"} className={"w-80"} />
           <h1
             className={
               "text-xl text-secondary-color font-bold md:text-3xl mt-2"
@@ -87,14 +91,16 @@ const WelcomePage = () => {
             </p>
           )}
         </main>
-        <footer className={"w-full h-1/6 flex flex-col items-center justify-center"}>
+        <footer
+          className={"w-full h-1/6 flex flex-col items-center justify-center"}
+        >
           <BInput
             inputPlaceholder={"Enter your name"}
             inputHandler={inputHandler}
             inputType={"text"}
           />
           <BButton
-            buttonValue={"Get Started"}
+            buttonValue={text.buttonValue}
             buttonHandler={startedBtnHandler}
           />
         </footer>

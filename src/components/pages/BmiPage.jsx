@@ -1,6 +1,5 @@
-import Context from "../BmiApp";
 import { useNavigate } from "react-router-dom";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import BPageTitle from "../BPageTitle";
 import BInfoBox from "../BInfoBox";
 import BImageButton from "../BImageButton";
@@ -9,6 +8,7 @@ import BTitle from "../BTitle";
 import BBoxImage from "../BBoxImage";
 import BErrorPopUp from "../BErrorPopUp";
 import useNavigateToHome from "../hooks/useNavigateToHome";
+import useCustomContext from "../context/customContext";
 
 const BmiPage = () => {
   const path = {
@@ -19,29 +19,34 @@ const BmiPage = () => {
     minusPath: `${process.env.PUBLIC_URL}/Icon/minus-icon.png`,
   };
   const text = {
+    title: "BMI CALCULATOR",
     heightText: "HEIGHT",
     ageText: "AGE",
     weightText: "WEIGHT",
+    buttonValue: "Calculate BMI",
   };
-  const {
-    username,
-    userGender,
-    setUserGender,
-    userHeight,
-    setUserHeight,
-    userWeight,
-    setUserWeight,
-    userAge,
-    setUserAge,
-    userInfo,
-    setUserInfo,
-  } = useContext(Context);
+  const { userInfo, setUserInfo } = useCustomContext();
   const navigate = useNavigate();
-  useNavigateToHome(username);
+  useNavigateToHome(userInfo.username);
   const [genderErr, setGenderErr] = useState({
     isOpen: false,
     message: null,
   });
+  const infoIsValid = Object.values(userInfo).every((value) => value);
+  const calculatedBtnHandler = () => {
+    try {
+      if (infoIsValid) navigate("/ResultPage");
+      else {
+        throw new Error("Please select your gender 🫥");
+      }
+    } catch (e) {
+      setGenderErr((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        message: e.message,
+      }));
+    }
+  };
   const closeErrModalHandler = () => {
     setGenderErr((prevState) => ({
       ...prevState,
@@ -49,16 +54,6 @@ const BmiPage = () => {
       message: null,
     }));
   };
-  useEffect(() => {
-    setUserInfo((prevUserInfo) => ({
-      ...prevUserInfo,
-      username,
-      userGender,
-      userHeight,
-      userWeight,
-    }));
-  }, [username, userGender, userHeight, userWeight, userAge]);
-  const isInfoValid = Object.values(userInfo).every((value) => value);
   return (
     <div className={"flex flex-col items-center"}>
       {genderErr.isOpen && (
@@ -68,7 +63,7 @@ const BmiPage = () => {
         />
       )}
       <header className={"w-full h-1/6 flex flex-col mt-5"}>
-        <BPageTitle />
+        <BPageTitle title={text.title} />
         <div className={"grid grid-cols-6 items-center"}>
           <BImageButton
             clickHandler={() => {
@@ -81,7 +76,7 @@ const BmiPage = () => {
               className={"col-span-1 px-4"}
             />
           </BImageButton>
-          <BTitle title={`Hi ${username} 👋🏽`} />
+          <BTitle title={`Hi ${userInfo.username} 👋🏽`} />
         </div>
       </header>
       <main className={"grid my-5"}>
@@ -89,7 +84,10 @@ const BmiPage = () => {
           <BInfoBox
             size={"sm"}
             clickHandler={() => {
-              setUserGender("male");
+              setUserInfo((prevInfo) => ({
+                ...prevInfo,
+                userGender: "male",
+              }));
             }}
           >
             <BImageButton>
@@ -99,7 +97,10 @@ const BmiPage = () => {
           <BInfoBox
             size={"sm"}
             clickHandler={() => {
-              setUserGender("female");
+              setUserInfo((prevInfo) => ({
+                ...prevInfo,
+                userGender: "female",
+              }));
             }}
           >
             <BImageButton>
@@ -110,13 +111,16 @@ const BmiPage = () => {
         <div className={"height flex justify-center items-center mt-4"}>
           <BInfoBox size={"lg"}>
             <BTitle title={text.heightText} />
-            <BTitle title={`${userHeight}cm`} />
+            <BTitle title={`${userInfo.userHeight}cm`} />
             <input
-              min={80}
-              max={230}
+              min={120}
+              max={220}
               type={"range"}
               onChange={(e) => {
-                setUserHeight(e.target.value);
+                setUserInfo((prevInfo) => ({
+                  ...prevInfo,
+                  userHeight: e.target.value,
+                }));
               }}
               className={
                 "w-4/5 h-0.5 mb-2 appearance-none rounded-full outline-none bg-primary-color"
@@ -127,18 +131,24 @@ const BmiPage = () => {
         <div className={"weight-age flex justify-around items-center mt-4"}>
           <BInfoBox size={"sm"}>
             <BTitle title={text.weightText} />
-            <BTitle title={userWeight} />
+            <BTitle title={userInfo.userWeight} />
             <div className={"flex w-full justify-around items-center"}>
               <BImageButton
                 clickHandler={() => {
-                  setUserWeight((prevWeight) => ++prevWeight);
+                  setUserInfo((prevInfo) => ({
+                    ...prevInfo,
+                    userWeight: prevInfo.userWeight++,
+                  }));
                 }}
               >
                 <BBoxImage path={path.plusPath} />
               </BImageButton>
               <BImageButton
                 clickHandler={() => {
-                  setUserWeight((prevWeight) => --prevWeight);
+                  setUserInfo((prevInfo) => ({
+                    ...prevInfo,
+                    userWeight: prevInfo.userWeight--,
+                  }));
                 }}
               >
                 <BBoxImage path={path.minusPath} />
@@ -147,18 +157,24 @@ const BmiPage = () => {
           </BInfoBox>
           <BInfoBox size={"sm"}>
             <BTitle title={text.ageText} />
-            <BTitle title={userAge} />
+            <BTitle title={userInfo.userAge} />
             <div className={"flex w-full justify-around items-center"}>
               <BImageButton
                 clickHandler={() => {
-                  setUserAge((prevAge) => ++prevAge);
+                  setUserInfo((prevInfo) => ({
+                    ...prevInfo,
+                    userAge: prevInfo.userAge++,
+                  }));
                 }}
               >
                 <BBoxImage path={path.plusPath} />
               </BImageButton>
               <BImageButton
                 clickHandler={() => {
-                  setUserAge((prevAge) => --prevAge);
+                  setUserInfo((prevInfo) => ({
+                    ...prevInfo,
+                    userAge: prevInfo.userAge--,
+                  }));
                 }}
               >
                 <BBoxImage path={path.minusPath} />
@@ -169,21 +185,8 @@ const BmiPage = () => {
       </main>
       <footer className={"w-full flex justify-center items-end"}>
         <BButton
-          buttonValue={"Calculate BMI"}
-          buttonHandler={() => {
-            try {
-              if (isInfoValid) navigate("/ResultPage");
-              else {
-                throw new Error("Please select your gender 🫥");
-              }
-            } catch (e) {
-              setGenderErr((prevState) => ({
-                ...prevState,
-                isOpen: true,
-                message: e.message,
-              }));
-            }
-          }}
+          buttonValue={text.buttonValue}
+          buttonHandler={calculatedBtnHandler}
         />
       </footer>
     </div>

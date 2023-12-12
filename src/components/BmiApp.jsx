@@ -1,46 +1,36 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useMemo, useState } from "react";
+import { CustomContext } from "./context/customContext";
 import { Routes, Route } from "react-router-dom";
-import BmiPage from "./pages/BmiPage";
-import WelcomePage from "./pages/WelcomePage";
-import ResultPage from "./pages/ResultPage";
+const WelcomePage = lazy(() => import("./pages/WelcomePage"));
+const BmiPage = lazy(() => import("./pages/BmiPage"));
+const ResultPage = lazy(() => import("./pages/ResultPage"));
 
-const Context = React.createContext();
-
-export const BmiApp = () => {
-  const [username, setUsername] = useState("");
-  const [userGender, setUserGender] = useState(null);
-  const [userHeight, setUserHeight] = useState(176);
-  const [userWeight, setUserWeight] = useState(60);
-  const [userAge, setUserAge] = useState(23);
+const BmiApp = () => {
   const [userInfo, setUserInfo] = useState({
-    username,
-    userGender,
-    userHeight,
-    userWeight,
-    userAge,
+    username: "",
+    userGender: null,
+    userHeight: 177,
+    userWeight: 60,
+    userAge: 22,
   });
-  const contextValue = {
-    username,
-    setUsername,
-    userGender,
-    setUserGender,
-    userHeight,
-    setUserHeight,
-    userWeight,
-    setUserWeight,
-    userAge,
-    setUserAge,
-    userInfo,
-    setUserInfo,
-  };
+  const contextValue = useMemo(() => {
+    return {
+      userInfo,
+      setUserInfo,
+    };
+  }, [userInfo]);
+
   return (
-    <Context.Provider value={contextValue}>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/BmiPage" element={<BmiPage />} />
-        <Route path={"/ResultPage"} element={<ResultPage />} />
-      </Routes>
-    </Context.Provider>
+    <CustomContext value={contextValue}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/BmiPage" element={<BmiPage />} />
+          <Route path={"/ResultPage"} element={<ResultPage />} />
+        </Routes>
+      </Suspense>
+    </CustomContext>
   );
 };
-export default Context;
+
+export default BmiApp;

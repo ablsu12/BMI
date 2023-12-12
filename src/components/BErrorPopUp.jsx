@@ -1,7 +1,6 @@
 import { BOverlay } from "./BOverlay";
-import { memo } from "react";
 
-const BErrorPopUp = memo(({ message, onClose }) => {
+const BErrorPopUp = ({ message, onClose }) => {
   const imagePath = `${process.env.PUBLIC_URL}/Icon/close-icon.png`;
   return (
     <>
@@ -26,5 +25,5 @@ const BErrorPopUp = memo(({ message, onClose }) => {
       </BOverlay>
     </>
   );
-});
+};
 export default BErrorPopUp;

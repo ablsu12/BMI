@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-const BPageTitle = memo(() => {
+const BPageTitle = memo(({ title }) => {
   return (
     <>
       <div className={"w-full h-20 flex justify-center items-center"}>
@@ -9,7 +9,7 @@ const BPageTitle = memo(() => {
             "text-2xl text-center text-primary-color font-bold md:text-3xl"
           }
         >
-          BMI Calculator
+          {title}
         </h1>
       </div>
     </>

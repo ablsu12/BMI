@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      borderWidth: {
+        '16': '16px'
+      },
       screens: {
         xs: "345px",
         sm: "440px",
