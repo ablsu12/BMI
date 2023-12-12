@@ -1,15 +1,17 @@
 const BInfoBox = ({ children, size, clickHandler }) => {
   const computedSize = () => {
-    if (size === "sm") {
-      return "w-36 h-36";
-    } else if (size === "md") {
-      return "w-60 h-60";
-    } else if (size === "lg") {
-      return "w-80 h-28";
+    if (size === 'sm') {
+      return 'w-36 h-36'
+    } else if (size === 'md') {
+      return 'w-60 h-60'
+    } else if (size === 'lg') {
+      return 'w-80 h-28'
+    } else if (size === 'xl') {
+      return 'w-80 h-96'
     } else {
-      return "w-40 h-40";
+      return 'w-40 h-40'
     }
-  };
+  }
   return (
     <div
       onClick={clickHandler}
@@ -19,6 +21,6 @@ const BInfoBox = ({ children, size, clickHandler }) => {
     >
       {children}
     </div>
-  );
-};
-export default BInfoBox;
+  )
+}
+export default BInfoBox
