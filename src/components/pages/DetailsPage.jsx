@@ -6,7 +6,7 @@ import BTitle from '../BTitle'
 import BButton from '../BButton'
 import React from 'react'
 
-export function DetailsPage() {
+const DetailsPage = () => {
   const text = {
     title: 'SUMMARY',
     buttonValue: 'Download user info',

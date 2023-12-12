@@ -5,10 +5,9 @@ import BButton from '../BButton'
 import { CircleSlider } from 'react-circle-slider'
 import useCustomContext from '../context/customContext'
 import { useNavigate } from 'react-router-dom'
-import BImageButton from '../BImageButton'
 import React from 'react'
 
-function ResultPage() {
+const ResultPage = () => {
   const text = {
     title: 'BMI RESULT',
     buttonValue: 'Details',
