@@ -22,7 +22,8 @@ const BmiApp = () => {
     else if (bmi >= 25 && bmi <= 29.9) return 'Overweight 🫥'
     else if (bmi >= 30) return 'Obesity 🫨'
   }
-  const calculateBMI = () => {
+
+  useEffect(() => {
     const { userWeight, userHeight } = userInfo
     const bmiValue = userWeight / (userHeight / 100) ** 2
     setUserInfo((prevInfo) => ({
@@ -30,10 +31,6 @@ const BmiApp = () => {
       bmi: bmiValue,
       status: status(bmiValue),
     }))
-  }
-
-  useEffect(() => {
-    calculateBMI()
   }, [userInfo.userWeight, userInfo.userHeight])
   const contextValue = useMemo(() => {
     return {

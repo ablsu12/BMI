@@ -63,6 +63,7 @@ const BmiPage = () => {
       )}
       <header className={'w-full h-1/6 flex flex-col mt-5'}>
         <BPageTitle title={text.title} />
+        <BTitle title={`Hi ${userInfo.username} 👋🏽`}/>
       </header>
       <main className={'grid my-5'}>
         <div className={'gender flex justify-around items-center mt-4'}>
